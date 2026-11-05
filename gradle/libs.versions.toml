@@ -1,0 +1,35 @@
+[versions]
+jvm = "21"
+kotlin = "2.4.21"
+# Kotlin API level of the lowest supported platform (2025.1 bundles Kotlin 2.1).
+kotlinApi = "2.1"
+intellijPlatform = "2.20.0"
+changelog = "2.5.0"
+ktlint = "14.2.0"
+detekt = "1.23.8"
+# The Kotlin version detekt 1.23.8 was built with; detekt fails on any other.
+detektKotlin = "2.0.21"
+junit = "4.13.2"
+opentest4j = "1.3.0"
+
+# Target platform for compilation and tests, and the IDEs the verifier checks.
+platform = "2026.1"
+platformLowest = "2025.1"
+lsp4ij = "0.21.0"
+
+# Bundled language server: the westquote/angel-lsp commit CI builds it from, the version at that commit, and the
+# Node.js release that builds it and is embedded in each executable.
+angelLsp = "0.3.103"
+angelLspCommit = "c1a2181013a60362ad5c413a1eebbc9a28bc36ec"
+nodeRuntime = "24.20.0"
+
+[libraries]
+junit = { module = "junit:junit", version.ref = "junit" }
+opentest4j = { module = "org.opentest4j:opentest4j", version.ref = "opentest4j" }
+
+[plugins]
+kotlin = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+intellijPlatform = { id = "org.jetbrains.intellij.platform", version.ref = "intellijPlatform" }
+changelog = { id = "org.jetbrains.changelog", version.ref = "changelog" }
+ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }

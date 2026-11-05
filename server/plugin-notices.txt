@@ -1,0 +1,7 @@
+Third-party notices for AngelScript Support
+
+AngelScript Support is distributed under the MIT License. Its keyword lists
+follow the AngelScript manual (https://www.angelcode.com/angelscript/).
+
+The plugin bundles the angel-lsp language server, built together with the
+Node.js runtime it embeds. Their notices follow.

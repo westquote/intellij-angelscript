@@ -1,0 +1,18 @@
+# Defaults apply (buildUponDefaultConfig); the entries below are the deviations.
+complexity:
+  CyclomaticComplexMethod:
+    # The lexer dispatches on the first character in one flat `when`.
+    ignoreSimpleWhenEntries: true
+  TooManyFunctions:
+    # Small private helpers are preferred over long functions; the lexer has one per token rule.
+    thresholdInClasses: 30
+style:
+  ReturnCount:
+    # Early returns for missing inputs keep the main path unindented.
+    max: 4
+  MagicNumber:
+    # Setting ranges such as 1..16 read best inline.
+    ignoreRanges: true
+  MaxLineLength:
+    # ktlint owns the line length.
+    active: false

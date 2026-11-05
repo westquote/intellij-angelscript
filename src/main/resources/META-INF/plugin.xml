@@ -1,0 +1,77 @@
+<idea-plugin>
+    <id>dev.plumfire.angelscript</id>
+    <name>AngelScript Support</name>
+    <vendor email="support@plumfire.dev" url="https://plumfire.dev">Plumfire LLC</vendor>
+    <category>Languages</category>
+    <resource-bundle>messages.AngelScriptBundle</resource-bundle>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.redhat.devtools.lsp4ij</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <fileType name="AngelScript"
+                  implementationClass="dev.plumfire.angelscript.lang.AngelScriptFileType"
+                  fieldName="INSTANCE"
+                  language="AngelScript"
+                  extensions="as"/>
+        <fileType name="AngelScript Predefined"
+                  implementationClass="dev.plumfire.angelscript.lang.AngelScriptPredefinedFileType"
+                  fieldName="INSTANCE"
+                  fileNames="as.predefined"
+                  patterns="*.as.predefined"/>
+
+        <lang.parserDefinition language="AngelScript"
+                               implementationClass="dev.plumfire.angelscript.lang.AngelScriptParserDefinition"/>
+        <lang.syntaxHighlighterFactory language="AngelScript"
+                                       implementationClass="dev.plumfire.angelscript.highlighting.AngelScriptSyntaxHighlighterFactory"/>
+        <lang.braceMatcher language="AngelScript"
+                           implementationClass="dev.plumfire.angelscript.lang.AngelScriptBraceMatcher"/>
+        <lang.commenter language="AngelScript"
+                        implementationClass="dev.plumfire.angelscript.lang.AngelScriptCommenter"/>
+        <lang.quoteHandler language="AngelScript"
+                           implementationClass="dev.plumfire.angelscript.lang.AngelScriptQuoteHandler"/>
+        <lineIndentProvider implementation="dev.plumfire.angelscript.lang.AngelScriptLineIndentProvider"/>
+        <typedHandler implementation="dev.plumfire.angelscript.lang.AngelScriptBraceTypedHandler"/>
+
+        <colorSettingsPage implementation="dev.plumfire.angelscript.highlighting.AngelScriptColorSettingsPage"/>
+        <projectConfigurable parentId="language"
+                             instance="dev.plumfire.angelscript.settings.AngelScriptConfigurable"
+                             id="dev.plumfire.angelscript.settings"
+                             key="settings.title"/>
+        <notificationGroup id="AngelScript" displayType="BALLOON" key="notification.title"/>
+        <editorFactoryDocumentListener implementation="dev.plumfire.angelscript.highlighting.SemanticTokenDocumentListener"/>
+
+        <codeInsight.parameterInfo language="AngelScript"
+                                   implementationClass="com.redhat.devtools.lsp4ij.features.signatureHelp.LSPParameterInfoHandler"/>
+        <lang.psiStructureViewFactory language="AngelScript"
+                                      implementationClass="com.redhat.devtools.lsp4ij.features.documentSymbol.LSPDocumentSymbolStructureViewFactory"/>
+    </extensions>
+
+    <extensions defaultExtensionNs="com.redhat.devtools.lsp4ij">
+        <server id="dev.plumfire.angelscript.server"
+                name="AngelScript Language Server"
+                factoryClass="dev.plumfire.angelscript.lsp.AngelScriptServerFactory">
+            <description><![CDATA[The angel-lsp language server for AngelScript, bundled with AngelScript Support.]]></description>
+        </server>
+        <fileTypeMapping fileType="AngelScript"
+                         serverId="dev.plumfire.angelscript.server"
+                         languageId="angelscript"/>
+        <fileTypeMapping fileType="AngelScript Predefined"
+                         serverId="dev.plumfire.angelscript.server"
+                         languageId="angelscript-predefined"/>
+    </extensions>
+
+    <projectListeners>
+        <listener class="dev.plumfire.angelscript.settings.ConfigFileListener"
+                  topic="com.intellij.openapi.vfs.newvfs.BulkFileListener"/>
+        <listener class="dev.plumfire.angelscript.lsp.SettingsChangeHandler"
+                  topic="dev.plumfire.angelscript.settings.AngelScriptSettingsListener"/>
+        <listener class="dev.plumfire.angelscript.highlighting.SemanticTokenEditorListener"
+                  topic="com.intellij.openapi.fileEditor.FileEditorManagerListener"/>
+    </projectListeners>
+
+    <applicationListeners>
+        <listener class="dev.plumfire.angelscript.lsp.TrustChangeHandler"
+                  topic="com.intellij.ide.trustedProjects.TrustedProjectsListener"/>
+    </applicationListeners>
+</idea-plugin>
