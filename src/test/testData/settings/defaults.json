@@ -1,0 +1,32 @@
+{
+  "builtinStringType": "string",
+  "builtinArrayType": "array",
+  "explicitPropertyAccessor": true,
+  "supportsForEach": true,
+  "supportsTypedEnumerations": false,
+  "supportsDigitSeparators": false,
+  "characterLiterals": false,
+  "allowUnicodeIdentifiers": false,
+  "definedSymbols": [],
+  "includePath": [],
+  "forceIncludePredefined": [],
+  "implicitMutualInclusion": false,
+  "hoistEnumParentScope": false,
+  "suppressAnalyzerErrors": true,
+  "completion": {
+    "builtinKeywords": true,
+    "snippets": true
+  },
+  "files": {
+    "exclude": [],
+    "angelScript": ["*.as"]
+  },
+  "formatter": {
+    "maxBlankLines": 1,
+    "indentSpaces": 4,
+    "useTabIndent": false
+  },
+  "trace": {
+    "server": "off"
+  }
+}

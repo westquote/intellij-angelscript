@@ -1,0 +1,16 @@
+// Declarations the host application registers with the engine.
+class string
+{
+    uint length() const;
+    string opAdd(const string &in) const;
+}
+
+class array<T>
+{
+    uint length() const;
+    void insertLast(const T &in);
+    T &opIndex(uint);
+}
+
+void print(const string &in text);
+float sqrt(float value);
