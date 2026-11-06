@@ -6,7 +6,7 @@ import org.jetbrains.annotations.PropertyKey
 
 private const val BUNDLE = "messages.AngelScriptBundle"
 
-internal object AngelScriptBundle : DynamicBundle(BUNDLE) {
+internal object AngelScriptBundle : DynamicBundle(AngelScriptBundle::class.java, BUNDLE) {
     @Nls
     fun message(@PropertyKey(resourceBundle = BUNDLE) key: String, vararg params: Any): String =
         getMessage(key, *params)

@@ -1,6 +1,6 @@
 package dev.plumfire.angelscript.lsp
 
-import com.intellij.ide.plugins.PluginManager
+import com.intellij.ide.plugins.cl.PluginAwareClassLoader
 import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.util.SystemInfo
 import com.intellij.util.system.CpuArch
@@ -75,8 +75,9 @@ internal object ServerBinaryLocator {
     fun locate(): ServerBinary {
         val override = AngelScriptApplicationSettings.getInstance().serverExecutable
         cached?.takeIf { it.first == override }?.let { return it.second }
-        // PluginId.getId compiles to a companion call against 2026.1 that 2025.1 cannot link.
-        val pluginDirectory = PluginManager.getPluginByClass(javaClass)?.pluginPath
+        // The plugin's class loader knows its descriptor. PluginId.getId compiles to a companion call against 2026.1
+        // that 2025.1 cannot link, and PluginManager.getPluginByClass is internal API from 2026.3.
+        val pluginDirectory = (javaClass.classLoader as? PluginAwareClassLoader)?.pluginDescriptor?.pluginPath
         val os = when {
             SystemInfo.isWindows -> OsFamily.WINDOWS
             SystemInfo.isMac -> OsFamily.MACOS

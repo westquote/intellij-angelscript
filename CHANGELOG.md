@@ -6,6 +6,10 @@ All notable changes to this project are documented in this file. The format foll
 
 ## [Unreleased]
 
+### Fixed
+
+- An internal and a deprecated IntelliJ Platform API use that the Plugin Verifier reports on IntelliJ IDEA 2026.3.
+
 ## [0.1.0] - 2026-11-05
 
 ### Added
