@@ -82,6 +82,7 @@ intellijPlatform {
         ides {
             create(IntelliJPlatformType.Rider, libs.versions.platform.get())
             create(IntelliJPlatformType.IntellijIdea, libs.versions.platform.get())
+            create(IntelliJPlatformType.IntellijIdea, libs.versions.platformNewest.get())
             create(IntelliJPlatformType.IntellijIdeaCommunity, libs.versions.platformLowest.get())
         }
     }

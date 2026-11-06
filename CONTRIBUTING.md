@@ -8,7 +8,7 @@ You need JDK 21. Gradle and all plugins are pinned; the wrapper downloads Gradle
 ./gradlew test                  # unit and platform tests; works on a fresh clone
 ./gradlew runIde                # IntelliJ IDEA with the plugin in a sandbox
 ./gradlew build                 # compile, test, ktlint, detekt and the plugin ZIP
-./gradlew verifyPlugin          # Plugin Verifier against Rider 2026.1, IDEA 2026.1 and IDEA 2025.1
+./gradlew verifyPlugin          # Plugin Verifier against Rider 2026.1 and IDEA 2025.1, 2026.1 and 2026.3
 ```
 
 The plugin ZIP bundles the [angel-lsp](https://github.com/westquote/angel-lsp) language server as a standalone
@@ -37,8 +37,8 @@ which fails the build if one is missing.
 
 The plugin is compiled and tested against IntelliJ IDEA 2026.1 rather than Rider. Rider's distribution is several
 times larger and its test framework adds nothing that this plugin uses, because the plugin depends only on the
-platform and LSP4IJ. The Plugin Verifier checks the result against Rider 2026.1, IntelliJ IDEA 2026.1 and IntelliJ
-IDEA 2025.1, the lowest supported build.
+platform and LSP4IJ. The Plugin Verifier checks the result against Rider 2026.1 and against IntelliJ IDEA 2025.1
+(the lowest supported build), 2026.1 and 2026.3 (the newest release, which catches later API changes).
 
 ## Code
 

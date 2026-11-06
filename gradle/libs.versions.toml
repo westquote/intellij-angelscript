@@ -15,6 +15,8 @@ opentest4j = "1.3.0"
 # Target platform for compilation and tests, and the IDEs the verifier checks.
 platform = "2026.1"
 platformLowest = "2025.1"
+# The newest IDE release the verifier checks, to catch API changes after the target platform.
+platformNewest = "2026.3"
 lsp4ij = "0.21.0"
 
 # Bundled language server: the westquote/angel-lsp commit CI builds it from, the version at that commit, and the
