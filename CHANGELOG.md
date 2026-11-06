@@ -6,6 +6,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-11-05
+
 ### Added
 
 - AngelScript file types for `.as` and `as.predefined` files.
@@ -14,3 +16,6 @@ All notable changes to this project are documented in this file. The format foll
 - Semantic colors from the language server, with C++ color fallbacks in Rider.
 - Project settings for the language server, and an `.angelscript.json` file to share them.
 - A machine-level setting for a custom language server executable.
+
+[Unreleased]: https://github.com/westquote/intellij-angelscript/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/westquote/intellij-angelscript/commits/v0.1.0

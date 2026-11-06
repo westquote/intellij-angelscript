@@ -9,8 +9,7 @@ Releases are built by CI only. A version tag `vX.Y.Z` runs `.github/workflows/re
    write access to the repository.
 
 Publishing to JetBrains Marketplace is a separate, manually started workflow (`publish.yml`). It downloads the
-signed ZIP from the GitHub release, checks it against `SHA256SUMS`, and uploads that file. The first releases go to
-the `beta` channel.
+signed ZIP from the GitHub release, checks it against `SHA256SUMS`, and uploads that file.
 
 ## Repository setup
 
@@ -75,5 +74,6 @@ Unloading:
 
 ## After the release
 
-- [ ] Publish the draft GitHub release, then run the publish workflow for the tag.
-- [ ] Check the Marketplace page: description, change notes, the beta channel.
+- [ ] Publish the draft GitHub release, then run the publish workflow for the tag. The first version of the plugin
+      is uploaded on the Marketplace website instead, which creates its page.
+- [ ] Check the Marketplace page: description and change notes.

@@ -92,7 +92,6 @@ intellijPlatform {
     }
     publishing {
         token = providers.environmentVariable("PUBLISH_TOKEN")
-        channels = listOf("beta")
     }
 }
 
