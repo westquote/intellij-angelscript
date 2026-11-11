@@ -1,6 +1,13 @@
 name: Publish
 
+# The release workflow calls this after publishing the release. Started by hand, it must run on the tag itself
+# (`gh workflow run publish.yml --ref vX.Y.Z -f tag=vX.Y.Z`): the marketplace environment accepts only v* tags.
 on:
+  workflow_call:
+    inputs:
+      tag:
+        type: string
+        required: true
   workflow_dispatch:
     inputs:
       tag:
@@ -33,6 +40,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          test "$TAG" = "$GITHUB_REF_NAME" || { echo "::error::Run this on the tag $TAG"; exit 1; }
           gh release download "$TAG" --repo "$GITHUB_REPOSITORY" --dir release
           (cd release && sha256sum --check SHA256SUMS)
       - name: Publish to JetBrains Marketplace

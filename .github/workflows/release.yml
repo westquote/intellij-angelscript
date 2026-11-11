@@ -7,7 +7,22 @@ on:
 permissions: {}
 
 jobs:
+  # Pushing the tag publishes the plugin, so a tag that doesn't match pluginVersion stops here, before the build.
+  version:
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: gradle.properties
+          sparse-checkout-cone-mode: false
+      - name: Check the tag against pluginVersion
+        run: grep -qx "pluginVersion=${GITHUB_REF_NAME#v}" gradle.properties || { echo "::error::$GITHUB_REF_NAME doesn't match pluginVersion"; exit 1; }
+
   build:
+    needs: version
     uses: ./.github/workflows/build.yml
     permissions:
       contents: read
@@ -56,13 +71,34 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          sparse-checkout: CHANGELOG.md
+          sparse-checkout-cone-mode: false
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: plugin-signed
           path: signed
-      - name: Create a draft release
+      # The release notes are the version's section of CHANGELOG.md.
+      - name: Publish the release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          version="${GITHUB_REF_NAME#v}"
           (cd signed && sha256sum --check SHA256SUMS)
-          gh release create "$GITHUB_REF_NAME" signed/* --repo "$GITHUB_REPOSITORY" --draft --title "$GITHUB_REF_NAME"
+          awk -v heading="## [$version]" '
+            /^## \[/ || /^\[[^]]+\]: / { if (found) exit; found = index($0, heading) == 1; next }
+            found
+          ' CHANGELOG.md > notes.md
+          grep -q '[^[:space:]]' notes.md || { echo "::error::CHANGELOG.md has no section for $version"; exit 1; }
+          gh release create "$GITHUB_REF_NAME" signed/* --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" --notes-file notes.md
+
+  # Uploads the released ZIP to JetBrains Marketplace.
+  publish:
+    needs: release
+    uses: ./.github/workflows/publish.yml
+    with:
+      tag: ${{ github.ref_name }}
+    permissions:
+      contents: read

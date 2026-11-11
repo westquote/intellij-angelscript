@@ -1,20 +1,27 @@
 # Releasing
 
-Releases are built by CI only. A version tag `vX.Y.Z` runs `.github/workflows/release.yml`:
+Releases are built and published by CI only. Pushing a version tag `vX.Y.Z` runs
+`.github/workflows/release.yml`; no other approval is needed:
 
-1. The build workflow builds the four language server executables from the pinned angel-lsp commit, then builds,
+1. The `version` job stops the run unless the tag matches `pluginVersion`.
+2. The build workflow builds the four language server executables from the pinned angel-lsp commit, then builds,
    tests and verifies the plugin ZIP with them.
-2. The `sign` job signs that ZIP, without building it again, and records its SHA-256 in `SHA256SUMS`.
-3. The `release` job attaches the signed ZIP and `SHA256SUMS` to a draft GitHub release. It is the only job with
-   write access to the repository.
+3. The `sign` job signs that ZIP, without building it again, and records its SHA-256 in `SHA256SUMS`.
+4. The `release` job publishes a GitHub release with the signed ZIP and `SHA256SUMS`, using the version's section of
+   `CHANGELOG.md` as notes, and fails if that section is missing. It is the only job with write access to the
+   repository.
+5. The `publish` job runs `publish.yml`, which downloads the signed ZIP from the release, checks it against
+   `SHA256SUMS`, and uploads that file to JetBrains Marketplace.
 
-Publishing to JetBrains Marketplace is a separate, manually started workflow (`publish.yml`). It downloads the
-signed ZIP from the GitHub release, checks it against `SHA256SUMS`, and uploads that file.
+The tag is the go-ahead, so finish the steps below and the manual checks before pushing it. If the upload fails,
+re-run the failed jobs of the release run, or start `publish.yml` on the tag:
+`gh workflow run publish.yml --ref vX.Y.Z -f tag=vX.Y.Z`.
 
 ## Repository setup
 
 - Environment `release` holds `CERTIFICATE_CHAIN`, `PRIVATE_KEY` and `PRIVATE_KEY_PASSWORD`.
-- Environment `marketplace` holds `PUBLISH_TOKEN` and requires a reviewer.
+- Environment `marketplace` holds `PUBLISH_TOKEN`, has no required reviewer, and accepts only `v*` tags as
+  deployment refs.
 - The Windows server executable is not code-signed yet; injecting the server invalidates Node.js's signature. Signing
   through SignPath belongs in the `server` job of `build.yml`, after the build step on `windows-latest`.
 
@@ -25,8 +32,8 @@ signed ZIP from the GitHub release, checks it against `SHA256SUMS`, and uploads 
 2. Run `./gradlew updateNotices -PangelLspServerDir=<server/dist>` and commit `THIRD-PARTY-NOTICES.txt`.
 3. If the server changed, compare its capabilities with the LSP4IJ features registered in `plugin.xml`, and the
    semantic token types it sends with `SemanticTokenKeys`.
-4. Move the `Unreleased` section of `CHANGELOG.md` to the new version, and set `pluginVersion` in
-   `gradle.properties`.
+4. Move the `Unreleased` section of `CHANGELOG.md` to the new version, update the compare links at its end, and set
+   `pluginVersion` in `gradle.properties`.
 
 ## Manual checks
 
@@ -74,6 +81,5 @@ Unloading:
 
 ## After the release
 
-- [ ] Publish the draft GitHub release, then run the publish workflow for the tag. The first version of the plugin
-      is uploaded on the Marketplace website instead, which creates its page.
-- [ ] Check the Marketplace page: description and change notes.
+- [ ] Check that the release run finished, including the `publish` job.
+- [ ] Once JetBrains approves the upload, check the Marketplace page: description and change notes.
