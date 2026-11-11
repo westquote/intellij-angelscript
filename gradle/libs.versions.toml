@@ -22,7 +22,7 @@ lsp4ij = "0.21.0"
 # Bundled language server: the westquote/angel-lsp commit CI builds it from, the version at that commit, and the
 # Node.js release that builds it and is embedded in each executable.
 angelLsp = "0.3.103"
-angelLspCommit = "c1a2181013a60362ad5c413a1eebbc9a28bc36ec"
+angelLspCommit = "0770ef15815c1c08018192251a08049f833ac864"
 nodeRuntime = "24.20.0"
 
 [libraries]

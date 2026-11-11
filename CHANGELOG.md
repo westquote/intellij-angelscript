@@ -8,6 +8,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Fixed
 
+- A call to a method that a subclass overrides, or that a class also gets from an interface, no longer shows a false
+  "Multiple matching signatures" warning.
 - The plugin no longer uses IntelliJ Platform API that is internal or deprecated in IntelliJ IDEA 2026.3.
 
 ## [0.1.0] - 2026-11-05
