@@ -6,6 +6,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-11-10
+
 ### Fixed
 
 - A call to a method that a subclass overrides, or that a class also gets from an interface, no longer shows a false
@@ -23,5 +25,6 @@ All notable changes to this project are documented in this file. The format foll
 - Project settings for the language server, and an `.angelscript.json` file to share them.
 - A machine-level setting for a custom language server executable.
 
-[Unreleased]: https://github.com/westquote/intellij-angelscript/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/westquote/intellij-angelscript/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/westquote/intellij-angelscript/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/westquote/intellij-angelscript/commits/v0.1.0
