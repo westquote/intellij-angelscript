@@ -38,7 +38,7 @@ which fails the build if one is missing.
 The plugin is compiled and tested against IntelliJ IDEA 2026.1 rather than Rider. Rider's distribution is several
 times larger and its test framework adds nothing that this plugin uses, because the plugin depends only on the
 platform and LSP4IJ. The Plugin Verifier checks the result against Rider 2026.1 and against IntelliJ IDEA 2025.1
-(the lowest supported build), 2026.1 and 2026.3 (the newest release, which catches later API changes).
+(the lowest supported build), 2026.1 and 2026.3, a release past the target that catches later API changes.
 
 ## Code
 
