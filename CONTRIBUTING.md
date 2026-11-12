@@ -7,8 +7,9 @@ You need JDK 21. Gradle and all plugins are pinned; the wrapper downloads Gradle
 ```
 ./gradlew test                  # unit and platform tests; works on a fresh clone
 ./gradlew runIde                # IntelliJ IDEA with the plugin in a sandbox
+./gradlew runIdeLowest          # the same in IntelliJ IDEA 2024.2, the lowest supported build
 ./gradlew build                 # compile, test, ktlint, detekt and the plugin ZIP
-./gradlew verifyPlugin          # Plugin Verifier against Rider 2026.1 and IDEA 2025.1, 2026.1 and 2026.3
+./gradlew verifyPlugin          # Plugin Verifier against Rider 2026.1 and IDEA 2024.2, 2026.1 and 2026.3
 ```
 
 The plugin ZIP bundles the [angel-lsp](https://github.com/westquote/angel-lsp) language server as a standalone
@@ -37,7 +38,7 @@ which fails the build if one is missing.
 
 The plugin is compiled and tested against IntelliJ IDEA 2026.1 rather than Rider. Rider's distribution is several
 times larger and its test framework adds nothing that this plugin uses, because the plugin depends only on the
-platform and LSP4IJ. The Plugin Verifier checks the result against Rider 2026.1 and against IntelliJ IDEA 2025.1
+platform and LSP4IJ. The Plugin Verifier checks the result against Rider 2026.1 and against IntelliJ IDEA 2024.2
 (the lowest supported build), 2026.1 and 2026.3, a release past the target that catches later API changes.
 
 ## Code
@@ -58,7 +59,7 @@ API uses below, which are accepted for the reasons given. Any other experimental
 |---|---|
 | LSP4IJ `LSPClientFeatures`, `LSPSemanticTokensFeature` | The way the LSP4IJ developer guide gives to configure features. The plugin uses it to turn off LSP4IJ's own semantic token requests, since it paints the tokens itself. |
 | Platform `TrustedProjectsListener` | The only notification that a project became trusted, which the plugin needs to read `.angelscript.json` and start the server then. |
-| Platform `com.intellij.ide.impl.isTrusted` (deprecated in 2026.1) | Its replacement, `TrustedProjects.isProjectTrusted`, is internal API in 2025.1, the lowest supported build. |
+| Platform `com.intellij.ide.impl.isTrusted` (deprecated in 2026.1) | Its replacement, `TrustedProjects.isProjectTrusted`, is internal API before 2026.1, and the plugin supports builds from 2024.2. |
 
 ## Tests
 

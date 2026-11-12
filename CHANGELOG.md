@@ -11,6 +11,10 @@ All notable changes to this project are documented in this file. The format foll
 - `.angelscript.json` keys that the settings page does not show are sent to the language server as written, instead
   of being skipped with a warning.
 
+### Changed
+
+- The plugin supports IDEs from 2024.2 (build 242). It needed 2025.1 before.
+
 ### Fixed
 
 - Rider no longer reports a "Class initialization must not depend on services" error from the plugin. Rider's C++

@@ -17,7 +17,7 @@ Rider and other IDEs built on the IntelliJ Platform.
 
 ## Requirements
 
-- Rider 2025.1 or later, or another IntelliJ Platform IDE of build 251 or later.
+- Rider 2024.2 or later, or another IntelliJ Platform IDE of build 242 or later.
 - The [LSP4IJ](https://plugins.jetbrains.com/plugin/23257-lsp4ij) plugin, version 0.21.0 or later. The IDE offers to
   install it with this plugin.
 - Windows x64, macOS (Apple silicon or Intel) or Linux x64 for the bundled language server. On other platforms, set

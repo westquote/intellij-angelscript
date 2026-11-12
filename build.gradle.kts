@@ -96,6 +96,19 @@ intellijPlatform {
     }
 }
 
+// `runIdeLowest` starts the lowest supported IDE with the plugin, to check it at run time as well as in the verifier.
+intellijPlatformTesting {
+    runIde {
+        register("runIdeLowest") {
+            type = IntelliJPlatformType.IntellijIdeaCommunity
+            version = libs.versions.platformLowest
+            plugins {
+                plugin("com.redhat.devtools.lsp4ij", libs.versions.lsp4ij.get())
+            }
+        }
+    }
+}
+
 changelog {
     groups.empty()
     repositoryUrl = providers.gradleProperty("pluginRepositoryUrl")

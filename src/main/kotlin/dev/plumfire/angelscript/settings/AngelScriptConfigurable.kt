@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project
 import com.intellij.openapi.project.ProjectManager
 import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.ui.Messages
+import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import com.intellij.openapi.util.io.FileUtil
 import com.intellij.ui.CollectionListModel
 import com.intellij.ui.ToolbarDecorator
@@ -38,7 +39,7 @@ internal class AngelScriptConfigurable(private val project: Project) : BoundConf
             }
             group(message("settings.group.server")) {
                 row(message("settings.serverExecutable")) {
-                    textFieldWithBrowseButton(FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor(), project)
+                    cell(executableField())
                         .bindText(::serverExecutable)
                         .align(AlignX.FILL)
                         .validationOnApply { validateExecutable(it.text)?.let(::error) }
@@ -118,6 +119,15 @@ internal class AngelScriptConfigurable(private val project: Project) : BoundConf
         val chosen = FileChooser.chooseFile(descriptor, project, null) ?: return null
         val base = project.basePath ?: return chosen.path
         return FileUtil.getRelativePath(base, chosen.path, '/')?.takeUnless { it.startsWith("..") } ?: chosen.path
+    }
+
+    // Built by hand: the UI DSL's textFieldWithBrowseButton and TextFieldWithBrowseButton.addBrowseFolderListener
+    // changed signatures in 2024.3, and no single form works from 2024.2 to 2026.3.
+    private fun executableField() = TextFieldWithBrowseButton().apply {
+        addActionListener {
+            val descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor()
+            FileChooser.chooseFile(descriptor, project, null)?.let { text = FileUtil.toSystemDependentName(it.path) }
+        }
     }
 
     private companion object {
