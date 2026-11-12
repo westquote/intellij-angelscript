@@ -10,6 +10,7 @@ All notable changes to this project are documented in this file. The format foll
 
 - Rider no longer reports a "Class initialization must not depend on services" error from the plugin. Rider's C++
   colors now apply whenever its C++ support is enabled, whichever color scheme is active.
+- The file type for `as.predefined` files is listed as "AngelScript Predefined" instead of a second "AngelScript".
 
 ## [0.1.1] - 2026-11-10
 

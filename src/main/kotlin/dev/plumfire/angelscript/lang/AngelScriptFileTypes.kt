@@ -23,6 +23,9 @@ internal object AngelScriptPredefinedFileType : LanguageFileType(AngelScriptLang
 
     override fun getName(): String = "AngelScript Predefined"
 
+    // The default, the language's display name, is the same as the AngelScript file type's.
+    override fun getDisplayName(): String = AngelScriptBundle.message("filetype.predefined.name")
+
     override fun getDescription(): String = AngelScriptBundle.message("filetype.predefined.description")
 
     override fun getDefaultExtension(): String = "predefined"

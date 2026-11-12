@@ -11,6 +11,7 @@ class EditorFeaturesTest : BasePlatformTestCase() {
         assertEquals(AngelScriptFileType, fileTypes.getFileTypeByFileName("main.as"))
         assertEquals(AngelScriptPredefinedFileType, fileTypes.getFileTypeByFileName("as.predefined"))
         assertEquals(AngelScriptPredefinedFileType, fileTypes.getFileTypeByFileName("engine.as.predefined"))
+        assertFalse(AngelScriptFileType.displayName == AngelScriptPredefinedFileType.displayName)
     }
 
     fun testPsiIsFlat() {
