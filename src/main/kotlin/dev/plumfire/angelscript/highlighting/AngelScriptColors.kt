@@ -1,19 +1,18 @@
 package dev.plumfire.angelscript.highlighting
 
 import com.intellij.openapi.editor.HighlighterColors
-import com.intellij.openapi.editor.colors.EditorColorsManager
 import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors as Default
 
 /**
- * The plugin's color keys. A key with a Rider C++ counterpart falls back to it when the IDE's color scheme has
- * attributes for it, and to a platform key otherwise.
+ * The plugin's color keys. A key with a Rider C++ counterpart falls back to it when Rider's C++ support is enabled,
+ * and to a platform key otherwise.
  *
- * A key's fallback is fixed when the key is created, so the keys are created when this object is first used,
- * not when the plugin loads. Switching to a scheme with different C++ keys takes effect after a restart.
+ * The choice depends only on the installed plugins, because the platform forbids reading the color scheme while a
+ * class initializes.
  */
 internal object AngelScriptColors {
-    private val scheme = EditorColorsManager.getInstance().globalScheme
+    private val cppColors = PluginPresence.isEnabled("com.jetbrains.rider-cpp")
 
     private val keys = mutableListOf<TextAttributesKey>()
 
@@ -80,21 +79,11 @@ internal object AngelScriptColors {
 
     @JvmField val MACRO = key("MACRO", Default.METADATA, "PREPROCESSOR_MACRO_IDENTIFIER")
 
-    /** [cppName] if [hasAttributes] says the scheme defines it, else [platformKey]. */
-    internal fun fallback(
-        cppName: String,
-        platformKey: TextAttributesKey,
-        hasAttributes: (TextAttributesKey) -> Boolean,
-    ): TextAttributesKey {
-        // find() creates an empty key when the IDE has none, so presence is decided by the attributes.
-        val cppKey = TextAttributesKey.find(cppName)
-        return if (hasAttributes(cppKey)) cppKey else platformKey
-    }
+    /** `ReSharper.CPP_`[cppName] if [cppColors], else [platformKey]. */
+    internal fun fallback(cppName: String?, platformKey: TextAttributesKey, cppColors: Boolean): TextAttributesKey =
+        if (cppName != null && cppColors) TextAttributesKey.find("ReSharper.CPP_$cppName") else platformKey
 
-    private fun key(name: String, platformKey: TextAttributesKey, cppName: String? = null): TextAttributesKey {
-        val fallback = cppName?.let { fallback("ReSharper.CPP_$it", platformKey, ::hasAttributes) } ?: platformKey
-        return TextAttributesKey.createTextAttributesKey("ANGELSCRIPT_$name", fallback).also { keys += it }
-    }
-
-    private fun hasAttributes(key: TextAttributesKey): Boolean = scheme.getAttributes(key)?.isEmpty == false
+    private fun key(name: String, platformKey: TextAttributesKey, cppName: String? = null): TextAttributesKey =
+        TextAttributesKey.createTextAttributesKey("ANGELSCRIPT_$name", fallback(cppName, platformKey, cppColors))
+            .also { keys += it }
 }

@@ -1,15 +1,9 @@
 package dev.plumfire.angelscript.highlighting
 
-import com.intellij.openapi.editor.DefaultLanguageHighlighterColors
 import com.intellij.openapi.editor.colors.CodeInsightColors
-import com.intellij.openapi.editor.colors.EditorColorsManager
-import com.intellij.openapi.editor.colors.EditorColorsScheme
-import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.editor.impl.DocumentImpl
-import com.intellij.openapi.editor.markup.TextAttributes
 import com.intellij.testFramework.fixtures.BasePlatformTestCase
 import org.eclipse.lsp4j.SemanticTokensLegend
-import java.awt.Color
 
 class SemanticTokensTest : BasePlatformTestCase() {
     // The legend angel-lsp 0.3.103 sends in its initialize response.
@@ -104,21 +98,6 @@ class SemanticTokensTest : BasePlatformTestCase() {
         assertEquals(listOf("A"), plan.keep)
         assertEquals(listOf("B", "INVALID"), plan.remove)
         assertEquals(listOf(c), plan.add)
-    }
-
-    fun testPresentCppKeyWinsAndAbsentOneDoesNot() {
-        val scheme = EditorColorsManager.getInstance().globalScheme.clone() as EditorColorsScheme
-        val cppName = "ReSharper.CPP_CLASS_IDENTIFIER"
-        val hasAttributes = { key: TextAttributesKey -> scheme.getAttributes(key)?.isEmpty == false }
-        val platformKey = DefaultLanguageHighlighterColors.CLASS_NAME
-        assertEquals(platformKey, AngelScriptColors.fallback(cppName, platformKey, hasAttributes))
-        scheme.setAttributes(TextAttributesKey.find(cppName), TextAttributes(Color.RED, null, null, null, 0))
-        assertEquals(cppName, AngelScriptColors.fallback(cppName, platformKey, hasAttributes).externalName)
-    }
-
-    fun testKeysWithoutCppAttributesUseThePlatformKey() {
-        assertEquals(DefaultLanguageHighlighterColors.CLASS_NAME, AngelScriptColors.CLASS.fallbackAttributeKey)
-        assertEquals(DefaultLanguageHighlighterColors.KEYWORD, AngelScriptColors.KEYWORD.fallbackAttributeKey)
     }
 
     fun testColorPageShowsEveryKeyAndItsDemoUsesKnownTags() {

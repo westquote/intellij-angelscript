@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file. The format foll
 
 ## [Unreleased]
 
+### Fixed
+
+- Rider no longer reports a "Class initialization must not depend on services" error from the plugin. Rider's C++
+  colors now apply whenever its C++ support is enabled, whichever color scheme is active.
+
 ## [0.1.1] - 2026-11-10
 
 ### Fixed
