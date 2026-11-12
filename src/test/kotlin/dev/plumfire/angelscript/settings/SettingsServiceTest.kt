@@ -48,6 +48,15 @@ class SettingsServiceTest : BasePlatformTestCase() {
         assertEquals(LanguageSettings(), service.state)
     }
 
+    // An apply keeps them in the file, as it keeps `$schema` above.
+    fun testUnknownKeysReachTheServer() {
+        Files.writeString(configFile, """{ "newSetting": "on", "formatter": { "spaceBeforeParen": true } }""")
+        val json = newService().serverJson()
+        assertEquals("on", json.getPath("newSetting")!!.asString)
+        assertTrue(json.getPath("formatter.spaceBeforeParen")!!.asBoolean)
+        assertEquals(4, json.getPath("formatter.indentSpaces")!!.asInt)
+    }
+
     fun testApplyWithoutAConfigFileStoresInTheProject() {
         val service = newService()
         service.applyPage(LanguageSettings(supportsForEach = false))

@@ -37,6 +37,7 @@ internal data class EffectiveSettings(
     val values: LanguageSettings,
     val fromFile: Set<String> = emptySet(),
     val extraFilePatterns: List<String> = emptyList(),
+    val passThrough: JsonObject = JsonObject(),
 )
 
 // The replacement, TrustedProjects.isProjectTrusted, is internal API before 2026.1. The platform trusts every project
@@ -86,7 +87,7 @@ internal class AngelScriptSettingsService(private val project: Project, private 
         val settings = effective()
         val patterns = FileTypeManager.getInstance().getAssociations(AngelScriptFileType).map { it.presentableString }
         val allPatterns = (listOf("*.as") + patterns + settings.extraFilePatterns).distinct()
-        return settings.values.toServerJson(project.basePath.orEmpty(), allPatterns)
+        return settings.values.toServerJson(project.basePath.orEmpty(), allPatterns, settings.passThrough)
     }
 
     /** Re-reads the settings in the background and publishes a change if the effective settings differ. */
@@ -127,7 +128,7 @@ internal class AngelScriptSettingsService(private val project: Project, private 
         file.overrides.forEach { it.applyTo(values) }
         report(file)
         val fromFile = file.overrides.mapTo(HashSet()) { it.setting.path }
-        return EffectiveSettings(values, fromFile, file.extraFilePatterns)
+        return EffectiveSettings(values, fromFile, file.extraFilePatterns, file.passThrough)
     }
 
     private fun readConfigFile(): ConfigFile {

@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file. The format foll
 
 ## [Unreleased]
 
+### Added
+
+- `.angelscript.json` keys that the settings page does not show are sent to the language server as written, instead
+  of being skipped with a warning.
+
 ### Fixed
 
 - Rider no longer reports a "Class initialization must not depend on services" error from the plugin. Rider's C++

@@ -90,8 +90,11 @@ Relative paths in `includePath` and `forceIncludePredefined` are relative to the
 name a server executable, its arguments or its environment. The IDE reads it again when it changes, and does not
 read it in a project that is not trusted.
 
-If the file is not valid JSON, it is ignored and a notification shows the parse error. Unknown keys and values of
-the wrong type are skipped and reported in a notification.
+Other keys go to the language server as written, so a project can use a server setting the settings page does
+not show yet. The plugin does not check them, so a misspelled key has no effect and no warning.
+
+If the file is not valid JSON, it is ignored and a notification shows the parse error. Values of the wrong type for
+the keys above, `trace` and `serverExecutable` are skipped and reported in a notification.
 
 ## Colors
 

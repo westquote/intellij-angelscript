@@ -1,5 +1,7 @@
 package dev.plumfire.angelscript.settings
 
+import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
@@ -57,17 +59,19 @@ class ConfigFileTest {
     }
 
     @Test
-    fun invalidValuesAndUnknownKeysAreListedWhileOthersApply() {
+    fun invalidValuesAndReservedKeysAreListedWhileOthersApply() {
         val file =
             ConfigFile.parse(
                 """
                 {
                   "builtinStringType": "not a type",
                   "supportsForEach": "yes",
-                  "formatter": { "indentSpaces": 40, "useTabIndent": true, "width": 3 },
+                  "formatter": { "indentSpaces": 40, "useTabIndent": true },
+                  "completion": true,
                   "definedSymbols": ["OK", "NOT OK"],
                   "serverExecutable": "/bin/sh",
                   "trace": { "server": "verbose" },
+                  "${'$'}schema": 1,
                   "characterLiterals": true
                 }
                 """.trimIndent(),
@@ -79,10 +83,11 @@ class ConfigFileTest {
                 "builtinStringType",
                 "supportsForEach",
                 "formatter.indentSpaces",
-                "formatter.width",
+                "completion",
                 "definedSymbols",
                 "serverExecutable",
                 "trace",
+                "${'$'}schema",
             ),
             file.ignoredKeys.toSet(),
         )
@@ -90,6 +95,37 @@ class ConfigFileTest {
             mapOf("formatter.useTabIndent" to true, "characterLiterals" to true),
             file.overrides.associate { it.setting.path to it.value },
         )
+        assertEquals(JsonObject(), file.passThrough)
+    }
+
+    @Test
+    fun unknownKeysPassThroughAsWritten() {
+        val file =
+            ConfigFile.parse(
+                """
+                {
+                  "newSetting": { "depth": [1, "two"] },
+                  "formatter": { "indentSpaces": 2, "spaceBeforeParen": true },
+                  "files": { "angelScript": ["*.asc"], "watch": false },
+                  "builtinStringType": "FString"
+                }
+                """.trimIndent(),
+                "/p",
+            )
+        assertEquals(emptyList<String>(), file.ignoredKeys)
+        assertEquals(
+            JsonParser.parseString(
+                """
+                {
+                  "newSetting": { "depth": [1, "two"] },
+                  "formatter": { "spaceBeforeParen": true },
+                  "files": { "watch": false }
+                }
+                """,
+            ),
+            file.passThrough,
+        )
+        assertEquals(2, file.value("formatter.indentSpaces"))
     }
 
     @Test

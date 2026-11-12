@@ -184,9 +184,13 @@ internal fun resolvePaths(paths: List<String>, baseDirectory: String): List<Stri
 
 internal fun isValidPath(path: String): Boolean = path.isNotEmpty() && '\u0000' !in path
 
-/** Builds the `angelScript` section sent to the server. */
-internal fun LanguageSettings.toServerJson(baseDirectory: String, filePatterns: List<String>): JsonObject {
-    val root = JsonObject()
+/** Builds the `angelScript` section sent to the server: [passThrough], then the keys the plugin models. */
+internal fun LanguageSettings.toServerJson(
+    baseDirectory: String,
+    filePatterns: List<String>,
+    passThrough: JsonObject = JsonObject(),
+): JsonObject {
+    val root = passThrough.deepCopy()
     for (setting in SETTINGS) root.setPath(setting.path, setting.serverJson(this, baseDirectory))
     root.setPath("files.angelScript", stringArray(filePatterns))
     root.setPath("trace.server", JsonPrimitive("off"))

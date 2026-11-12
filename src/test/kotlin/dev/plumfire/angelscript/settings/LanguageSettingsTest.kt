@@ -90,6 +90,19 @@ class LanguageSettingsTest {
     }
 
     @Test
+    fun passThroughKeysAreSentAndModeledKeysWin() {
+        val passThrough =
+            JsonParser.parseString(
+                """{ "newSetting": 7, "formatter": { "spaceBeforeParen": true, "indentSpaces": 9 } }""",
+            ).asJsonObject
+        val json = LanguageSettings().toServerJson("/p", listOf("*.as"), passThrough)
+        assertEquals(JsonPrimitive(7), json.getPath("newSetting"))
+        assertEquals(JsonPrimitive(true), json.getPath("formatter.spaceBeforeParen"))
+        assertEquals(JsonPrimitive(4), json.getPath("formatter.indentSpaces"))
+        assertEquals(JsonPrimitive(9), passThrough.getPath("formatter.indentSpaces"))
+    }
+
+    @Test
     fun validationRules() {
         val typeName = setting<TypeNameSetting>("builtinStringType")
         assertNull(typeName.validate("Engine::FString"))
