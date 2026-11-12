@@ -3,7 +3,7 @@ jvm = "21"
 kotlin = "2.4.21"
 # Kotlin API level of the lowest supported platform (2025.1 bundles Kotlin 2.1).
 kotlinApi = "2.1"
-intellijPlatform = "2.20.0"
+intellijPlatform = "2.20.1"
 changelog = "2.5.0"
 ktlint = "14.2.0"
 detekt = "1.23.8"
