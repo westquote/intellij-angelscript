@@ -79,6 +79,11 @@ Settings:
       shows "Set by .angelscript.json" for its keys.
 - [ ] In an untrusted project, the file is not read and the server does not start until the project is trusted.
 
+Oldest supported IDE:
+
+- [ ] With `./gradlew runIdeLowest`, open the sample project, open `main.as` and check semantic colors, hover and
+      completion. Change a setting on the settings page, apply it, restart the IDE, and check that it was kept.
+
 Unloading:
 
 - [ ] Open the sample project and files, unload the plugin, and check with the platform's unload diagnostics that

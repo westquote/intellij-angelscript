@@ -94,8 +94,9 @@ Other keys go to the language server as written, so a project can use a server s
 not show yet. The plugin does not check them, so a misspelled key has no effect and no warning.
 
 If the file is not valid JSON, it is ignored and a notification shows the parse error. Values of the wrong type for
-the keys above, `completion`, `files` or `formatter` when not an object, a `$schema` that is not a string, `trace`
-and `serverExecutable` are skipped and reported in a notification.
+the keys above, `completion`, `files` or `formatter` when not an object, a `$schema` that is not a string, `trace`,
+`serverExecutable` and key names that contain a dot are skipped and reported in a notification. Write nested keys
+as objects.
 
 ## Colors
 

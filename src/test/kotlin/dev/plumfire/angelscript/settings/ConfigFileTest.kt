@@ -129,6 +129,18 @@ class ConfigFileTest {
     }
 
     @Test
+    fun namesWithADotAreListedAndNotSent() {
+        val file =
+            ConfigFile.parse(
+                """{ "formatter.indentSpaces": 2, "foo.bar": 1, "foo": 3 }""",
+                "/p",
+            )
+        assertEquals(setOf("formatter.indentSpaces", "foo.bar"), file.ignoredKeys.toSet())
+        assertEquals(JsonParser.parseString("""{ "foo": 3 }"""), file.passThrough)
+        assertNull(file.value("formatter.indentSpaces"))
+    }
+
+    @Test
     fun extraFilePatternsAreAccepted() {
         val file =
             ConfigFile.parse(

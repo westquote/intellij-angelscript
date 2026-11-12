@@ -39,7 +39,8 @@ internal class ConfigFile(
                 return invalid(e.cause?.message ?: e.message)
             }
             val passThrough = JsonObject()
-            val ignored = ArrayList<String>()
+            // A name with a dot would be read as a nested path, so it is neither applied nor passed on.
+            val ignored = root.keySet().filterTo(ArrayList()) { '.' in it }
             for ((path, value) in unknownKeys(root)) {
                 if (path in RESERVED) ignored += path else passThrough.setPath(path, value.deepCopy())
             }
@@ -62,6 +63,7 @@ internal class ConfigFile(
                 when {
                     name == SCHEMA && value is JsonPrimitive && value.isString -> emptyList()
                     name in NESTED && value is JsonObject -> value.entrySet().map { (key, v) -> "$name.$key" to v }
+                    '.' in name -> emptyList()
                     else -> listOf(name to value)
                 }.filter { it.first !in known }
             }
