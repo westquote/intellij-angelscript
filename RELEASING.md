@@ -19,11 +19,16 @@ re-run the failed jobs of the release run, or start `publish.yml` on the tag:
 
 ## Repository setup
 
-- Environment `release` holds `CERTIFICATE_CHAIN`, `PRIVATE_KEY` and `PRIVATE_KEY_PASSWORD`.
+- Environment `release` holds `CERTIFICATE_CHAIN`, `PRIVATE_KEY` and `PRIVATE_KEY_PASSWORD`, and accepts only `v*`
+  tags as deployment refs. `PRIVATE_KEY` holds the decrypted key: the signer fails with "pad block corrupted" on a
+  key encrypted by OpenSSL 3, even with the right password.
 - Environment `marketplace` holds `PUBLISH_TOKEN`, has no required reviewer, and accepts only `v*` tags as
   deployment refs.
-- The Windows server executable is not code-signed yet; injecting the server invalidates Node.js's signature. Signing
-  through SignPath belongs in the `server` job of `build.yml`, after the build step on `windows-latest`.
+- The tag ruleset "release tags" covers `v*`: it restricts creating, updating, deleting and force-pushing those tags,
+  with Repository admin allowed to bypass. Pushing a release tag therefore takes an admin.
+- The Windows server executable is not code-signed yet; injecting the server invalidates Node.js's signature, so the
+  added signature will be the only one. Signing with Plumfire LLC's Azure code-signing certificate belongs in the
+  `server` job of `build.yml`, after the build step on `windows-latest`.
 
 ## Before the tag
 

@@ -43,6 +43,8 @@ In IDEs with the JavaScript or Flex plugins, ActionScript also claims `*.as`. To
 remove `*.as` from the ActionScript file type and add it to the AngelScript file type under
 **Settings | Editor | File Types**.
 
+The older AngelScript Language Support plugin also claims `*.as`. Install only one of the two.
+
 ## Settings
 
 **Settings | Languages & Frameworks | AngelScript** holds the language server settings of the project:
