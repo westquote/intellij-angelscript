@@ -5,7 +5,7 @@ import com.intellij.openapi.extensions.PluginId;
 
 /**
  * Plugin lookups by ID. Java, because Kotlin compiled against 2026.1 reaches {@code PluginId.getId} through
- * {@code PluginId.Companion}, which does not exist in 2025.1, where {@code PluginId} is a Java class.
+ * {@code PluginId.Companion}, which does not exist before 2026.1, where {@code PluginId} is a Java class.
  */
 final class PluginPresence {
     private PluginPresence() {

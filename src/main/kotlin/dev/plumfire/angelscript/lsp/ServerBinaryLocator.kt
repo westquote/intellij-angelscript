@@ -76,7 +76,7 @@ internal object ServerBinaryLocator {
         val override = AngelScriptApplicationSettings.getInstance().serverExecutable
         cached?.takeIf { it.first == override }?.let { return it.second }
         // Ask the plugin's class loader for its descriptor: PluginManager.getPluginByClass is internal from 2026.3,
-        // and a PluginId lookup compiled against 2026.1 does not link on 2025.1.
+        // and a PluginId lookup compiled against 2026.1 does not link before 2026.1.
         val pluginDirectory = (javaClass.classLoader as? PluginAwareClassLoader)?.pluginDescriptor?.pluginPath
         val os = when {
             SystemInfo.isWindows -> OsFamily.WINDOWS

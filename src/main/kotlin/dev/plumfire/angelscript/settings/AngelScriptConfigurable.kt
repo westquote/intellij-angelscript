@@ -9,6 +9,7 @@ import com.intellij.openapi.ui.DialogPanel
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.ui.TextFieldWithBrowseButton
 import com.intellij.openapi.util.io.FileUtil
+import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.ui.CollectionListModel
 import com.intellij.ui.ToolbarDecorator
 import com.intellij.ui.components.JBList
@@ -126,7 +127,8 @@ internal class AngelScriptConfigurable(private val project: Project) : BoundConf
     private fun executableField() = TextFieldWithBrowseButton().apply {
         addActionListener {
             val descriptor = FileChooserDescriptorFactory.createSingleFileNoJarsDescriptor()
-            FileChooser.chooseFile(descriptor, project, null)?.let { text = FileUtil.toSystemDependentName(it.path) }
+            val current = LocalFileSystem.getInstance().findFileByPath(FileUtil.toSystemIndependentName(text))
+            FileChooser.chooseFile(descriptor, project, current)?.let { text = FileUtil.toSystemDependentName(it.path) }
         }
     }
 
