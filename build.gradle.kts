@@ -2,6 +2,7 @@ import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import org.jetbrains.intellij.platform.gradle.tasks.PrepareSandboxTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import java.io.OutputStream
@@ -241,7 +242,8 @@ val checkNotices =
 
 val executableServers = serverExecutables.keys.filterNot { it.startsWith("windows") }.map { "**/server/$it/angel-lsp" }
 
-tasks.prepareSandbox {
+// runIde and each custom IDE run use their own prepareSandbox_<run> task; the test sandboxes need no server.
+tasks.withType<PrepareSandboxTask>().matching { it.name.startsWith("prepareSandbox") }.configureEach {
     from(prepareServer) {
         into(intellijPlatform.projectName.map { "$it/server" })
     }
