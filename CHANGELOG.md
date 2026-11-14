@@ -6,10 +6,13 @@ All notable changes to this project are documented in this file. The format foll
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-11-13
+
 ### Added
 
 - `.angelscript.json` keys that the settings page does not show are sent to the language server as written, instead
-  of being skipped with a warning.
+  of being skipped with a warning. Key names that contain a dot are not sent but listed in a notification; write nested
+  keys as objects.
 
 ### Changed
 
@@ -41,6 +44,7 @@ All notable changes to this project are documented in this file. The format foll
 - Project settings for the language server, and an `.angelscript.json` file to share them.
 - A machine-level setting for a custom language server executable.
 
-[Unreleased]: https://github.com/westquote/intellij-angelscript/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/westquote/intellij-angelscript/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/westquote/intellij-angelscript/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/westquote/intellij-angelscript/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/westquote/intellij-angelscript/commits/v0.1.0
