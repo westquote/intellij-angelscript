@@ -66,8 +66,8 @@ Semantic colors:
 
 - [ ] Class, method, parameter, local, field, enum, enum member and namespace names are colored; after typing stops,
       colors line up with the text.
-- [ ] With a C++ file and an AngelScript file side by side, in the default dark and light schemes: class, member
-      function, local, parameter, namespace, enum, field, global function and macro names match.
+- [ ] In Rider's default dark and light schemes, class, interface, global function and field names are colored, not
+      plain text.
 - [ ] Closing the file removes its highlighters.
 
 Settings:

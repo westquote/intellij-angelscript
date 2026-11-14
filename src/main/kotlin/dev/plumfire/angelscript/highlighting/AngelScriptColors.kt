@@ -5,15 +5,13 @@ import com.intellij.openapi.editor.colors.TextAttributesKey
 import com.intellij.openapi.editor.DefaultLanguageHighlighterColors as Default
 
 /**
- * The plugin's color keys. A key with a Rider C++ counterpart falls back to it when Rider's C++ support is enabled,
- * and to a platform key otherwise.
+ * The plugin's color keys, each falling back to a platform key.
  *
- * The choice depends only on the installed plugins, because the platform forbids reading the color scheme while a
- * class initializes.
+ * Rider's C++ keys are not used as fallbacks. Rider's own schemes define many of them only by inheritance, which the
+ * frontend does not resolve for them, so a name painted with one shows as plain text. Which keys have their own colors
+ * differs between schemes, and the platform forbids reading the scheme while a class initializes.
  */
 internal object AngelScriptColors {
-    private val cppColors = PluginPresence.isEnabled("com.jetbrains.rider-cpp")
-
     private val keys = mutableListOf<TextAttributesKey>()
 
     /** Every key, in declaration order. */
@@ -55,35 +53,30 @@ internal object AngelScriptColors {
 
     @JvmField val NAMESPACE = key("NAMESPACE", Default.CLASS_REFERENCE)
 
-    @JvmField val CLASS = key("CLASS", Default.CLASS_NAME, "CLASS_IDENTIFIER")
+    @JvmField val CLASS = key("CLASS", Default.CLASS_NAME)
 
-    @JvmField val INTERFACE = key("INTERFACE", Default.INTERFACE_NAME, "CLASS_IDENTIFIER")
+    @JvmField val INTERFACE = key("INTERFACE", Default.INTERFACE_NAME)
 
-    @JvmField val ENUM = key("ENUM", Default.CLASS_NAME, "ENUM_IDENTIFIER")
+    @JvmField val ENUM = key("ENUM", Default.CLASS_NAME)
 
-    @JvmField val ENUM_MEMBER = key("ENUM_MEMBER", Default.STATIC_FIELD, "ENUM_ENUMERATOR_IDENTIFIER")
+    @JvmField val ENUM_MEMBER = key("ENUM_MEMBER", Default.STATIC_FIELD)
 
-    @JvmField val TYPE = key("TYPE", Default.CLASS_NAME, "CLASS_IDENTIFIER")
+    @JvmField val TYPE = key("TYPE", Default.CLASS_NAME)
 
-    @JvmField val TYPE_PARAMETER = key("TYPE_PARAMETER", Default.PARAMETER, "TEMPLATE_PARAMETER_IDENTIFIER")
+    @JvmField val TYPE_PARAMETER = key("TYPE_PARAMETER", Default.PARAMETER)
 
     @JvmField val PARAMETER = key("PARAMETER", Default.PARAMETER)
 
-    @JvmField val LOCAL_VARIABLE = key("LOCAL_VARIABLE", Default.LOCAL_VARIABLE, "LOCAL_VARIABLE_IDENTIFIER")
+    @JvmField val LOCAL_VARIABLE = key("LOCAL_VARIABLE", Default.LOCAL_VARIABLE)
 
-    @JvmField val FIELD = key("FIELD", Default.INSTANCE_FIELD, "CLASS_FIELD_IDENTIFIER")
+    @JvmField val FIELD = key("FIELD", Default.INSTANCE_FIELD)
 
-    @JvmField val FUNCTION_CALL = key("FUNCTION_CALL", Default.FUNCTION_CALL, "GLOBAL_FUNCTION_IDENTIFIER")
+    @JvmField val FUNCTION_CALL = key("FUNCTION_CALL", Default.FUNCTION_CALL)
 
     @JvmField val METHOD_CALL = key("METHOD_CALL", Default.INSTANCE_METHOD)
 
-    @JvmField val MACRO = key("MACRO", Default.METADATA, "PREPROCESSOR_MACRO_IDENTIFIER")
+    @JvmField val MACRO = key("MACRO", Default.METADATA)
 
-    /** `ReSharper.CPP_`[cppName] if [cppColors], else [platformKey]. */
-    internal fun fallback(cppName: String?, platformKey: TextAttributesKey, cppColors: Boolean): TextAttributesKey =
-        if (cppName != null && cppColors) TextAttributesKey.find("ReSharper.CPP_$cppName") else platformKey
-
-    private fun key(name: String, platformKey: TextAttributesKey, cppName: String? = null): TextAttributesKey =
-        TextAttributesKey.createTextAttributesKey("ANGELSCRIPT_$name", fallback(cppName, platformKey, cppColors))
-            .also { keys += it }
+    private fun key(name: String, platformKey: TextAttributesKey): TextAttributesKey =
+        TextAttributesKey.createTextAttributesKey("ANGELSCRIPT_$name", platformKey).also { keys += it }
 }

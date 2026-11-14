@@ -10,7 +10,7 @@ Rider and other IDEs built on the IntelliJ Platform.
   parameter info and the structure view, provided by the bundled
   [angel-lsp](https://github.com/sashi0034/angel-lsp) language server through
   [LSP4IJ](https://plugins.jetbrains.com/plugin/23257-lsp4ij).
-- Semantic colors for types, functions, variables and other names, which follow the IDE's C++ colors in Rider.
+- Semantic colors for types, functions, variables and other names.
 - Project settings for the engine's string and array types, language features, include paths and defined symbols,
   shared with the team through an `.angelscript.json` file.
 <!-- Plugin description end -->
@@ -103,10 +103,8 @@ as objects.
 **Settings | Editor | Color Scheme | AngelScript** lists every color the plugin uses, under **Lexical** for colors
 from the editor's own highlighting and **Semantic** for colors from the language server.
 
-In Rider, names fall back to the colors of the matching C++ names (class, enum, enumerator, template parameter,
-local variable, field, global function and macro), so AngelScript looks like C++ in the same scheme. Other names,
-and all names in IDEs without C++ colors, fall back to the IDE's general language colors. Set a color on the
-AngelScript page to override the fallback.
+Names fall back to the IDE's general language colors (class, function, field and so on), which Rider's own schemes
+also use for C++ by default. Set a color on the AngelScript page to override the fallback.
 
 ## Troubleshooting
 

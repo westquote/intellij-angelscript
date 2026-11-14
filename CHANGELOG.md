@@ -17,8 +17,9 @@ All notable changes to this project are documented in this file. The format foll
 
 ### Fixed
 
-- Rider no longer reports a "Class initialization must not depend on services" error from the plugin. Rider's C++
-  colors now apply whenever its C++ support is enabled, whichever color scheme is active.
+- Rider no longer reports a "Class initialization must not depend on services" error from the plugin.
+- Names fall back to the IDE's general language colors in Rider too, instead of Rider's C++ colors. Rider's schemes
+  define many C++ colors only by inheritance, which left those names as plain text.
 - The file type for `as.predefined` files is listed as "AngelScript Predefined" instead of a second "AngelScript".
 
 ## [0.1.1] - 2026-11-10
