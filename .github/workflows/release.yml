@@ -94,11 +94,13 @@ jobs:
           grep -q '[^[:space:]]' notes.md || { echo "::error::CHANGELOG.md has no section for $version"; exit 1; }
           gh release create "$GITHUB_REF_NAME" signed/* --repo "$GITHUB_REPOSITORY" --title "$GITHUB_REF_NAME" --notes-file notes.md
 
-  # Uploads the released ZIP to JetBrains Marketplace.
+  # Uploads the released ZIP to JetBrains Marketplace. In practice the called workflow gets its environment's
+  # PUBLISH_TOKEN only when the caller passes secrets; without this the v0.1.2 upload got an empty token.
   publish:
     needs: release
     uses: ./.github/workflows/publish.yml
     with:
       tag: ${{ github.ref_name }}
+    secrets: inherit
     permissions:
       contents: read
