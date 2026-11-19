@@ -15,7 +15,7 @@ import java.nio.file.Path
 
 class SettingsServiceTest : BasePlatformTestCase() {
     private val scope = CoroutineScope(SupervisorJob())
-    private val platformTrust = projectTrust
+    private val savedTrust = projectTrust
     private lateinit var configFile: Path
 
     override fun setUp() {
@@ -27,7 +27,7 @@ class SettingsServiceTest : BasePlatformTestCase() {
     override fun tearDown() {
         try {
             scope.cancel()
-            projectTrust = platformTrust
+            projectTrust = savedTrust
             Files.deleteIfExists(configFile)
         } finally {
             super.tearDown()
@@ -64,12 +64,18 @@ class SettingsServiceTest : BasePlatformTestCase() {
         assertFalse(Files.exists(configFile))
     }
 
+    // The plugin finds the trust check by name, so only a run on the IDE shows that the name is right.
+    fun testThePlatformTrustCheckIsFound() {
+        assertTrue(platformTrustCheckFound())
+        assertTrue(platformTrust(project))
+    }
+
     fun testAnUntrustedProjectIgnoresTheConfigFileAndStartsNoServer() {
         Files.writeString(configFile, """{ "builtinStringType": "FString" }""")
         projectTrust = { false }
         assertEquals("string", newService().effective().values.builtinStringType)
         assertFalse(AngelScriptServerFactory.canStart(project))
-        projectTrust = platformTrust
+        projectTrust = savedTrust
         assertEquals("FString", newService().effective().values.builtinStringType)
     }
 

@@ -61,8 +61,12 @@ API uses below, which are accepted for the reasons given. Any other experimental
 | API | Reason |
 |---|---|
 | LSP4IJ `LSPClientFeatures`, `LSPSemanticTokensFeature` | The way the LSP4IJ developer guide gives to configure features. The plugin uses it to turn off LSP4IJ's own semantic token requests, since it paints the tokens itself. |
-| Platform `TrustedProjectsListener` | The only notification that a project became trusted, which the plugin needs to read `.angelscript.json` and start the server then. |
-| Platform `com.intellij.ide.impl.isTrusted` (deprecated in 2026.1) | Its replacement, `TrustedProjects.isProjectTrusted`, is internal API before 2026.1, and the plugin supports builds from 2024.2. |
+| Platform `TrustedProjectsListener` | The only notification that a project became trusted, which the plugin needs to read `.angelscript.json` and start the server then. Experimental before 2026.3. |
+
+The plugin checks project trust by finding the platform method at run time, in `AngelScriptSettingsService.kt`. The
+public method, `TrustedProjects.isProjectTrusted`, exists from 2026.1; the older `com.intellij.ide.impl.isTrusted` is
+experimental, and deprecated in 2026.3. The verifier can't see a method found this way, so a test checks that the
+lookup succeeds, and a new platform release should be checked for a change to either method.
 
 ## Tests
 

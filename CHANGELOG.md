@@ -10,6 +10,8 @@ All notable changes to this project are documented in this file. The format foll
 
 - The plugin is built and tested with LSP4IJ 0.30.1. LSP4IJ 0.21, used before, is not compatible with IntelliJ IDEA
   2026.3.
+- On IntelliJ IDEA 2026.1 and later, the plugin checks project trust with the public platform method instead of one
+  that 2026.3 deprecates.
 
 ## [0.1.2] - 2026-11-13
 

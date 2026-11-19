@@ -4,13 +4,13 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.google.gson.JsonParseException
 import com.google.gson.JsonParser
-import com.intellij.ide.impl.isTrusted
 import com.intellij.openapi.command.WriteCommandAction
 import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.openapi.components.service
+import com.intellij.openapi.diagnostic.logger
 import com.intellij.openapi.diagnostic.thisLogger
 import com.intellij.openapi.fileEditor.FileDocumentManager
 import com.intellij.openapi.fileTypes.FileTypeManager
@@ -28,6 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.jetbrains.annotations.VisibleForTesting
 import java.io.IOException
+import java.lang.reflect.Method
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicBoolean
@@ -40,11 +41,39 @@ internal data class EffectiveSettings(
     val passThrough: JsonObject = JsonObject(),
 )
 
-// The replacement, TrustedProjects.isProjectTrusted, is internal API before 2026.1. The platform trusts every project
-// in tests, so tests replace the check to cover an untrusted one.
-@Suppress("DEPRECATION")
+// The platform's trust check is TrustedProjects.isProjectTrusted from 2026.1. Before that it is internal, and the
+// older com.intellij.ide.impl.isTrusted is experimental, and deprecated from 2026.3. Neither is clean across the
+// builds the plugin supports, so the plugin finds the method at run time: the newer one if present, else the older
+// one. If a future build removes both, the plugin treats every project as untrusted and logs a warning.
+private val trustCheck: Method? by lazy {
+    val method = TRUST_METHODS.firstNotNullOfOrNull { (className, methodName) ->
+        try {
+            Class.forName(className, true, Project::class.java.classLoader).getMethod(methodName, Project::class.java)
+        } catch (_: ReflectiveOperationException) {
+            null
+        }
+    }
+    if (method == null) {
+        logger<AngelScriptSettingsService>().warn("No project trust check found; treating projects as untrusted")
+    }
+    method
+}
+
+// Static methods, newest first.
+private val TRUST_METHODS = listOf(
+    "com.intellij.ide.trustedProjects.TrustedProjects" to "isProjectTrusted",
+    "com.intellij.ide.impl.TrustedProjects" to "isTrusted",
+)
+
 @VisibleForTesting
-internal var projectTrust: (Project) -> Boolean = { it.isTrusted() }
+internal fun platformTrustCheckFound(): Boolean = trustCheck != null
+
+@VisibleForTesting
+internal fun platformTrust(project: Project): Boolean = trustCheck?.invoke(null, project) == true
+
+// The platform trusts every project in tests, so tests replace the check to cover an untrusted one.
+@VisibleForTesting
+internal var projectTrust: (Project) -> Boolean = ::platformTrust
 
 internal fun isProjectTrusted(project: Project): Boolean = projectTrust(project)
 
