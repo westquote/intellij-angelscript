@@ -6,6 +6,8 @@ All notable changes to this project are documented in this file. The format foll
 
 ## [Unreleased]
 
+## [0.1.3] - 2026-11-19
+
 ### Changed
 
 - The plugin is built and tested with LSP4IJ 0.30.1. LSP4IJ 0.21, used before, is not compatible with IntelliJ IDEA
@@ -51,7 +53,8 @@ All notable changes to this project are documented in this file. The format foll
 - Project settings for the language server, and an `.angelscript.json` file to share them.
 - A machine-level setting for a custom language server executable.
 
-[Unreleased]: https://github.com/westquote/intellij-angelscript/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/westquote/intellij-angelscript/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/westquote/intellij-angelscript/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/westquote/intellij-angelscript/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/westquote/intellij-angelscript/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/westquote/intellij-angelscript/commits/v0.1.0
