@@ -29,6 +29,7 @@ import kotlinx.coroutines.launch
 import org.jetbrains.annotations.VisibleForTesting
 import java.io.IOException
 import java.lang.reflect.Method
+import java.lang.reflect.Modifier
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicBoolean
@@ -48,7 +49,9 @@ internal data class EffectiveSettings(
 private val trustCheck: Method? by lazy {
     val method = TRUST_METHODS.firstNotNullOfOrNull { (className, methodName) ->
         try {
-            Class.forName(className, true, Project::class.java.classLoader).getMethod(methodName, Project::class.java)
+            Class.forName(className, true, Project::class.java.classLoader)
+                .getMethod(methodName, Project::class.java)
+                .takeIf { Modifier.isStatic(it.modifiers) }
         } catch (_: ReflectiveOperationException) {
             null
         }
@@ -59,14 +62,14 @@ private val trustCheck: Method? by lazy {
     method
 }
 
-// Static methods, newest first.
+// Newest first. Only a static method is used, since the plugin calls it without an instance.
 private val TRUST_METHODS = listOf(
     "com.intellij.ide.trustedProjects.TrustedProjects" to "isProjectTrusted",
     "com.intellij.ide.impl.TrustedProjects" to "isTrusted",
 )
 
 @VisibleForTesting
-internal fun platformTrustCheckFound(): Boolean = trustCheck != null
+internal fun platformTrustCheckClass(): String? = trustCheck?.declaringClass?.name
 
 @VisibleForTesting
 internal fun platformTrust(project: Project): Boolean = trustCheck?.invoke(null, project) == true

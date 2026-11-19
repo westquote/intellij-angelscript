@@ -66,7 +66,7 @@ class SettingsServiceTest : BasePlatformTestCase() {
 
     // The plugin finds the trust check by name, so only a run on the IDE shows that the name is right.
     fun testThePlatformTrustCheckIsFound() {
-        assertTrue(platformTrustCheckFound())
+        assertEquals("com.intellij.ide.trustedProjects.TrustedProjects", platformTrustCheckClass())
         assertTrue(platformTrust(project))
     }
 

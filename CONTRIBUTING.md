@@ -64,7 +64,7 @@ API uses below, which are accepted for the reasons given. Any other experimental
 | Platform `TrustedProjectsListener` | The only notification that a project became trusted, which the plugin needs to read `.angelscript.json` and start the server then. Experimental before 2026.3. |
 
 The plugin checks project trust by finding the platform method at run time, in `AngelScriptSettingsService.kt`. The
-public method, `TrustedProjects.isProjectTrusted`, exists from 2026.1; the older `com.intellij.ide.impl.isTrusted` is
+method `TrustedProjects.isProjectTrusted` is public from 2026.1; the older `com.intellij.ide.impl.isTrusted` is
 experimental, and deprecated in 2026.3. The verifier can't see a method found this way, so a test checks that the
 lookup succeeds, and a new platform release should be checked for a change to either method.
 
