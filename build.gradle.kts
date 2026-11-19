@@ -2,7 +2,9 @@ import org.jetbrains.changelog.Changelog
 import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.intellij.platform.gradle.IntelliJPlatformType
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
+import org.jetbrains.intellij.platform.gradle.models.ProductRelease
 import org.jetbrains.intellij.platform.gradle.tasks.PrepareSandboxTask
+import org.jetbrains.intellij.platform.gradle.tasks.VerifyPluginTask
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import java.io.OutputStream
@@ -83,8 +85,15 @@ intellijPlatform {
         ides {
             create(IntelliJPlatformType.Rider, libs.versions.platform.get())
             create(IntelliJPlatformType.IntellijIdea, libs.versions.platform.get())
-            create(IntelliJPlatformType.IntellijIdea, libs.versions.platformNewest.get())
             create(IntelliJPlatformType.IntellijIdeaCommunity, libs.versions.platformLowest.get())
+            // The newest release and EAP, so that a change in a new IDE shows up before the Marketplace verifies an
+            // upload against it.
+            for (channel in listOf(ProductRelease.Channel.RELEASE, ProductRelease.Channel.EAP)) {
+                latest {
+                    types = listOf(IntelliJPlatformType.IntellijIdea)
+                    channels = listOf(channel)
+                }
+            }
         }
     }
     signing {
@@ -126,6 +135,33 @@ configurations.matching { it.name == "detekt" }.configureEach {
             useVersion(libs.versions.detektKotlin.get())
         }
     }
+}
+
+// The Marketplace verifies an upload together with the newest LSP4IJ for each IDE, and reports the dependency as
+// unavailable on an IDE where that LSP4IJ has compatibility problems. `verifyLsp4ij` checks the LSP4IJ the plugin is
+// built with on the same IDEs, so such a problem fails the build instead of the Marketplace check.
+val lsp4ij = configurations.dependencyScope("lsp4ij")
+val lsp4ijArchive =
+    configurations.resolvable("lsp4ijArchive") {
+        extendsFrom(lsp4ij.get())
+        isTransitive = false
+    }
+
+dependencies {
+    lsp4ij("com.jetbrains.plugins:com.redhat.devtools.lsp4ij:${libs.versions.lsp4ij.get()}@zip")
+}
+
+val verifyLsp4ij =
+    tasks.register<VerifyPluginTask>("verifyLsp4ij") {
+        description = "Verifies the LSP4IJ the plugin is built with on the IDEs the plugin is verified on."
+        group = "verification"
+        archiveFile.fileProvider(lsp4ijArchive.map { it.singleFile })
+        failureLevel = listOf(VerifyPluginTask.FailureLevel.COMPATIBILITY_PROBLEMS)
+        verificationReportsDirectory = layout.buildDirectory.dir("reports/pluginVerifier-lsp4ij")
+    }
+
+tasks.verifyPlugin {
+    dependsOn(verifyLsp4ij)
 }
 
 tasks.withType<AbstractArchiveTask>().configureEach {

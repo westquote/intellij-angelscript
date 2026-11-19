@@ -38,8 +38,11 @@ which fails the build if one is missing.
 
 The plugin is compiled and tested against IntelliJ IDEA 2026.1 rather than Rider. Rider's distribution is several
 times larger and its test framework adds nothing that this plugin uses, because the plugin depends only on the
-platform and LSP4IJ. The Plugin Verifier checks the result against Rider 2026.1 and against IntelliJ IDEA 2024.2
-(the lowest supported build), 2026.1 and 2026.3, a release past the target that catches later API changes.
+platform and LSP4IJ. The Plugin Verifier checks the result against Rider 2026.1, IntelliJ IDEA 2024.2 (the lowest
+supported build) and 2026.1, and the newest IntelliJ IDEA release and EAP, which catch later API changes.
+`verifyPlugin` first runs `verifyLsp4ij`, which checks the LSP4IJ version in `gradle/libs.versions.toml` on the same
+IDEs: the Marketplace cannot resolve the plugin's dependency on an IDE where LSP4IJ itself has compatibility problems,
+and fails the upload's check there.
 
 ## Code
 

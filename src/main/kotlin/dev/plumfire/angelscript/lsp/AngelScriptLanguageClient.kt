@@ -12,7 +12,8 @@ import dev.plumfire.angelscript.settings.AngelScriptSettingsService
 import org.eclipse.lsp4j.PublishDiagnosticsParams
 import java.util.concurrent.CompletableFuture
 
-internal class AngelScriptLanguageClient(project: Project) : LanguageClientImpl(project) {
+// Open so that tests can count settings notifications.
+internal open class AngelScriptLanguageClient(project: Project) : LanguageClientImpl(project) {
     // LSP4IJ creates a client for every server start and, on stop, calls dispose() directly rather than through
     // Disposer, so the connection cannot have the client as its parent.
     private val connection = project.messageBus.connect().apply {

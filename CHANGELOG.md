@@ -6,6 +6,11 @@ All notable changes to this project are documented in this file. The format foll
 
 ## [Unreleased]
 
+### Changed
+
+- The plugin is built and tested with LSP4IJ 0.30.1. LSP4IJ 0.21, used before, is not compatible with IntelliJ IDEA
+  2026.3.
+
 ## [0.1.2] - 2026-11-13
 
 ### Added
